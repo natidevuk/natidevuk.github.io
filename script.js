@@ -71,3 +71,39 @@ function giveListener(marker, window, focus)
         });
     });
 }
+
+function selectLocation(position, location)
+{
+    map.position = position;
+
+    switch(location)
+    {
+        case "Poland":
+            polandWindow.open({
+                anchor: polandMarker,
+                map,
+                shouldFocus: focus,
+            });
+            germanyWindow.close();
+            czechWindow.close();
+            break;
+        case "Germany":
+            germanyWindow.open({
+                anchor: germanyMarker,
+                map,
+                shouldFocus: focus,
+            });
+            polandWindow.close();
+            czechWindow.close();
+            break;
+        case "Czech":
+            czechWindow.open({
+                anchor: czechMarker,
+                map,
+                shouldFocus: focus,
+            });
+            polandWindow.close();
+            germanyWindow.close();
+            break;
+    }
+}
