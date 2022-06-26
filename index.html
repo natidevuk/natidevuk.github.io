@@ -9,9 +9,15 @@
     <script src="script.js"></script>
 </head>
 <body>
-    <div id="map">
-        hello
+    <div id="sideBar">
+        <button onclick="selectLocation({ lat: 52.237049, lng: 21.017532}, 'Poland')">Warsaw</button>
+        <button onclick="selectLocation({ lat: 52.520008, lng: 13.404954}, 'Germany')">Berlin</button>
+        <button onclick="selectLocation({ lat: 50.075539, lng: 14.437800}, 'Czech')">Prague</button>
     </div>
+    <div id="map">
+
+    </div>
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaGcECr83tKGaV-MBmrsgPWaA5zbaneT8&callback=initMap&v=weekly" async></script>
 </body>
 </html>
