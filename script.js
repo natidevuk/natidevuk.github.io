@@ -19,7 +19,6 @@ function initMap() {
     polandMarker = placeMarker(Poland, "Poland");
     germanyMarker = placeMarker(Germany, "Germany");
     czechMarker = placeMarker(Czech, "Czech");
-    mymarker = new google.maps.marker();
 
     //Windows
     polandWindow = infoWindow(
