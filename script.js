@@ -4,11 +4,14 @@ const Germany = { lat: 52.520008, lng: 13.404954};
 const Czech = { lat: 50.075539, lng: 14.437800};
 let polandMarker, germanyMarker, czechMarker;
 let polandWindow, germanyWindow, czechWindow;
+let mymarker;
+const locationIcon = 'http://earth.google.com/images/kml-icons/track-directional/track-none.png';
 
 function initMap() {
+    GetLocation(true);
     map = new google.maps.Map(document.getElementById("map"), {
         center: Poland,
-        zoom: 5,
+        zoom: 20,
         mapTypeId: 'satellite'
     });
 
@@ -16,6 +19,7 @@ function initMap() {
     polandMarker = placeMarker(Poland, "Poland");
     germanyMarker = placeMarker(Germany, "Germany");
     czechMarker = placeMarker(Czech, "Czech");
+    mymarker = new google.maps.marker();
 
     //Windows
     polandWindow = infoWindow(
@@ -43,14 +47,16 @@ function initMap() {
     giveListener(polandMarker, polandWindow, false);
     giveListener(germanyMarker, germanyWindow, false);
     giveListener(czechMarker, czechWindow, false);
+
 }
 
-function placeMarker(pos, title)
+function placeMarker(pos, title, type)
 {
     return new google.maps.Marker({
         position: pos,
         map,
-        title: title
+        icon: type,
+        title: title,
     })
 }
 
@@ -105,5 +111,41 @@ function selectLocation(position, location)
             polandWindow.close();
             germanyWindow.close();
             break;
+    }
+}
+
+const interval = setInterval(function() {
+    GetLocation(false);
+}, 5000);
+
+
+
+function GetLocation(bool)
+{
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+
+                if(bool) {
+                    map.setCenter(pos);
+                    placeMarker(pos, "Location", locationIcon);
+                }
+                else
+                {
+                    placeMarker(pos, "Location", locationIcon);
+                }
+
+            },
+            () => {
+                handleLocationError(true, infoWindow, map.getCenter());
+            }
+        );
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
     }
 }
