@@ -6,9 +6,34 @@ let polandMarker, germanyMarker, czechMarker;
 let polandWindow, germanyWindow, czechWindow;
 let mymarker;
 const locationIcon = 'http://earth.google.com/images/kml-icons/track-directional/track-none.png';
+let distToCzech, distToPoland, distToGermany;
+
+function distance(lat1, lon1, lat2, lon2, unit) {
+    if ((lat1 == lat2) && (lon1 == lon2)) {
+        return 0;
+    }
+    else {
+        var radlat1 = Math.PI * lat1/180;
+        var radlat2 = Math.PI * lat2/180;
+        var theta = lon1-lon2;
+        var radtheta = Math.PI * theta/180;
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        if (dist > 1) {
+            dist = 1;
+        }
+        dist = Math.acos(dist);
+        dist = dist * 180/Math.PI;
+        dist = dist * 60 * 1.1515;
+        if (unit=="K") { dist = dist * 1.609344 }
+        if (unit=="N") { dist = dist * 0.8684 }
+        return dist;
+    }
+}
 
 function initMap() {
     GetLocation(true);
+    mymarker = GetLocation(false);
+
     map = new google.maps.Map(document.getElementById("map"), {
         center: Poland,
         zoom: 20,
@@ -19,6 +44,7 @@ function initMap() {
     polandMarker = placeMarker(Poland, "Poland");
     germanyMarker = placeMarker(Germany, "Germany");
     czechMarker = placeMarker(Czech, "Czech");
+
 
     //Windows
     polandWindow = infoWindow(
@@ -39,14 +65,14 @@ function initMap() {
         "Capital: <b> Prague </b>" + "<br>" +
         "Country: <b> Czech 🇨🇿</b>" + "<br>" +
         "Prague Population: <b>1.3m</b> (2020)" + "<br>" +
-        "Czech Population: <b>10.7m</b> (2020)"
+        "Czech Population: <b>10.7m</b> (2020)" +
+        "Distance: " + distance(czechMarker.lat, czechMarker.lng, mymarker.lat, mymarker.lng) + "KM"
     )
 
     //Add listeners
     giveListener(polandMarker, polandWindow, false);
     giveListener(germanyMarker, germanyWindow, false);
     giveListener(czechMarker, czechWindow, false);
-
 }
 
 function placeMarker(pos, title, type)
@@ -131,11 +157,11 @@ function GetLocation(bool)
 
                 if(bool) {
                     map.setCenter(pos);
-                    placeMarker(pos, "Location", locationIcon);
+                    mymarker = placeMarker(pos, "Location", locationIcon);
                 }
                 else
                 {
-                    placeMarker(pos, "Location", locationIcon);
+                    mymarker = placeMarker(pos, "Location", locationIcon);
                 }
 
             },
